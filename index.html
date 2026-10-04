@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Projeto G1 sobre preços e comportamento na base simulada do mercado imobiliário brasileiro, de 2015 a 2024.">
+  <title>Mercado Imobiliário Brasileiro | Projeto G1</title>
+  <style>
+    :root{color-scheme:light;--ink:#17343c;--muted:#53686e;--teal:#187a89;--line:#d8e4e6}
+    *{box-sizing:border-box}body{margin:0;background:#f5f8f8;color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+    header,main,footer{max-width:1160px;margin:auto;padding:32px}header{padding-top:64px}nav{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:14px;border-bottom:1px solid var(--line);padding-bottom:20px}
+    .tag{color:var(--teal);font-weight:650;letter-spacing:.08em;text-transform:uppercase;font-size:12px}h1{font-size:clamp(36px,5vw,64px);line-height:1.08;letter-spacing:-.04em;max-width:850px;margin:28px 0 20px}h2{font-size:26px;letter-spacing:-.02em;margin-top:0}p{max-width:850px}a{color:var(--teal);text-underline-offset:4px}.intro{font-size:20px;color:var(--muted);max-width:720px}.identity{font-size:14px;color:var(--muted);border-left:3px solid var(--teal);padding-left:18px;margin:28px 0}.actions{display:flex;flex-wrap:wrap;gap:12px;margin:28px 0}.button{padding:10px 18px;border:1px solid var(--teal);border-radius:6px;text-decoration:none;font-weight:600}.primary{background:var(--teal);color:white}.note{color:var(--muted);font-size:14px}
+    .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:44px}.kpi{background:white;border:1px solid var(--line);border-radius:8px;padding:20px 16px}.kpi span{display:block;font-size:12px;color:var(--muted)}.kpi strong{display:block;font-size:clamp(18px,2vw,24px);margin-top:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}section{margin-bottom:36px}.panel{padding:28px;background:white;border:1px solid var(--line);border-radius:8px}ul{padding-left:20px}li{margin-bottom:10px}.preview{display:block;width:100%;border:1px solid var(--line);border-radius:8px}figure{margin:0}figcaption{font-size:13px;color:var(--muted);margin-top:8px}.tech{display:flex;gap:8px;flex-wrap:wrap}.tech span{padding:5px 12px;background:#e8f0f1;border-radius:4px;font-size:14px}footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);margin-top:24px}
+    @media(max-width:850px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}header,main,footer{padding:24px}.kpi:last-child{grid-column:1/-1}}
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Navegação principal"><span>Pedro Artur Brandão Murillo</span><a href="https://github.com/pedro-art2611/projeto-g1-mercado-imobiliario">Código e análise no GitHub</a></nav>
+    <p class="tag">Avaliação G1 · Tema 12 · 2015 a 2024</p>
+    <h1>Mercado Imobiliário Brasileiro</h1>
+    <p class="intro">Preços, localização e perfil dos imóveis em uma base simulada. Dez anos de registros para investigar oscilações e diferenças entre localidades.</p>
+    <div class="identity"><strong>Aluno:</strong> Pedro Artur Brandão Murillo<br><strong>Professor:</strong> Alexandre Neves Louzada<br><strong>Disciplina:</strong> Linguagem de Programação: Análise e Visualização de Dados com Python<br><strong>Avaliação:</strong> G1</div>
+    <div class="actions"><a class="button primary" href="https://github.com/pedro-art2611/projeto-g1-mercado-imobiliario">Explorar o projeto</a><a class="button" href="https://github.com/pedro-art2611/projeto-g1-mercado-imobiliario/blob/main/notebooks/analise_mercado_imobiliario.ipynb">Ler o notebook executado</a></div>
+    <p class="note"><a href="https://projeto-g1-mercado-imobiliario-9njgs7po5ls3yj7mvsc9kx.streamlit.app/">Abrir dashboard interativo no Streamlit</a></p>
+  </header>
+  <main>
+    <section aria-label="Indicadores da base completa" class="kpis">
+      <div class="kpi"><span>Preço mediano do imóvel</span><strong>R$ 537.645,22</strong></div>
+      <div class="kpi"><span>Preço mediano por m²</span><strong>R$ 10.968,15</strong></div>
+      <div class="kpi"><span>Área mediana</span><strong>121 m²</strong></div>
+      <div class="kpi"><span>Taxa média de juros</span><strong>10,52%</strong></div>
+      <div class="kpi"><span>Registros analisados</span><strong>4.440</strong></div>
+    </section>
+    <div class="grid">
+      <section class="panel"><h2>Problema analisado</h2><p>Como os preços dos imóveis se comportam na base simulada do mercado imobiliário brasileiro entre 2015 e 2024, considerando localização, características dos imóveis e indicadores econômicos?</p><p>A análise combina distribuição de preços, comparação geográfica, evolução mensal, perfil dos imóveis e correlação estatística.</p></section>
+      <section class="panel"><h2>A base em números</h2><p>São 16 colunas originais e 120 meses, de janeiro de 2015 a dezembro de 2024. Cada mês possui um registro por cidade.</p><p><strong>37 cidades, 20 UFs e cinco regiões.</strong> A cobertura não inclui todas as UFs brasileiras. Não foram encontrados valores ausentes ou linhas duplicadas.</p><a href="https://github.com/AlexandreLouzada/Dados-Simulados-G2/blob/main/datasets_g2_30_temas/simulacao_mercado_imobiliario_brasil.csv">Consultar a fonte do professor</a></section>
+    </div>
+    <section class="panel"><h2>O que a análise encontrou</h2><ul><li>A mediana mensal por m² passou de R$ 11.564,40 para R$ 12.048,09 entre os meses extremos, variação de 4,18%. A série oscila e não demonstra alta contínua.</li><li>Centro-Oeste apresenta a maior mediana regional por m². Petrópolis tem a maior mediana entre as cidades da base.</li><li>O IQR identificou 248 preços extremos (5,59%). Eles foram mantidos por não haver evidência suficiente de erro.</li><li>As correlações lineares são fracas: a maior magnitude foi aproximadamente 0,034. Não há conclusão causal.</li></ul></section>
+    <section><h2>Exploração no dashboard</h2><p>Filtros de período, região, UF, cidade, tipo e nível de preço atualizam indicadores, gráficos e interpretações. A série temporal inclui média móvel de 12 meses; as análises de perfil e correlação utilizam Matplotlib e Seaborn.</p><figure><img class="preview" src="imagens/dashboard-preview.png" alt="Captura do dashboard Streamlit local com filtros, indicadores e gráfico de preços"><figcaption>Dashboard executado localmente com os registros da base completa.</figcaption></figure></section>
+    <section class="panel"><h2>Tecnologias</h2><div class="tech"><span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Seaborn</span><span>Plotly</span><span>Streamlit</span><span>SQLAlchemy</span><span>SQLite</span><span>GitHub</span></div><p>O notebook executado registra os cálculos e uma consulta SQL. O dashboard lê o SQLite versionado e pode reconstruí-lo a partir do CSV preservado.</p></section>
+    <section class="panel"><h2>Limites da interpretação</h2><p>Os registros são simulados. As conclusões se limitam à base analisada, sem representar o mercado real brasileiro. Não há ajuste de inflação ou acompanhamento de imóveis individuais.</p><p>O preço por m² fornecido diverge da razão entre preço e área. O campo original foi preservado; níveis de preço são categorias exploratórias, sem uma escala quantitativa presumida.</p></section>
+    <section><h2>Links do projeto</h2><div class="actions"><a class="button" href="https://github.com/pedro-art2611/projeto-g1-mercado-imobiliario">Repositório</a><a class="button" href="https://pedro-art2611.github.io/projeto-g1-mercado-imobiliario/">GitHub Pages</a><a class="button" href="https://github.com/pedro-art2611/projeto-g1-mercado-imobiliario/blob/main/notebooks/analise_mercado_imobiliario.ipynb">Notebook</a><a class="button primary" href="https://projeto-g1-mercado-imobiliario-9njgs7po5ls3yj7mvsc9kx.streamlit.app/">Dashboard Streamlit</a></div></section>
+  </main>
+  <footer>Pedro Artur Brandão Murillo · Avaliação G1 · Professor Alexandre Neves Louzada<br>Linguagem de Programação: Análise e Visualização de Dados com Python</footer>
+</body>
+</html>
