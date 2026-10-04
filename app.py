@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -23,6 +24,18 @@ ROTULOS = {'area_m2': 'Área (m²)', 'quartos': 'Quartos', 'vagas_garagem': 'Vag
 
 def br(valor, casas=2):
     return f'{valor:,.{casas}f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+
+
+def quantidade(valor, singular, plural, casas=0):
+    return f'{br(valor, casas)} {singular if valor == 1 else plural}'
+
+
+def moeda_eixo(valor, posicao):
+    if abs(valor) >= 1_000_000:
+        return f'R$ {br(valor / 1_000_000, 1)} mi'
+    if abs(valor) >= 1_000:
+        return f'R$ {br(valor / 1_000, 0)} mil'
+    return f'R$ {br(valor, 0)}'
 
 
 def narrar(texto):
@@ -115,11 +128,12 @@ def main():
     cols = st.columns(5)
     cols[0].metric('Preço mediano do imóvel', f'R$ {br(recorte.preco_imovel.median())}')
     cols[1].metric('Preço mediano por m²', f'R$ {br(recorte.preco_m2.median())}',
-                   delta=f'{br(variacao)}% entre meses extremos' if variacao is not None else None,
+                   delta=f'{br(variacao)}% no período' if variacao is not None else None,
+                   help='Variação da mediana mensal do primeiro ao último mês com dados no recorte.',
                    delta_color='off')
     cols[2].metric('Área mediana', f'{br(recorte.area_m2.median(), 0)} m²')
     cols[3].metric('Taxa média de juros', f'{br(recorte.taxa_juros.mean())}%')
-    cols[4].metric('Registros analisados', br(len(recorte), 0))
+    cols[4].metric('Registro analisado' if len(recorte) == 1 else 'Registros analisados', br(len(recorte), 0))
     abas = st.tabs(['Visão geral', 'Evolução temporal', 'Análise geográfica',
                     'Perfil dos imóveis', 'Relações estatísticas', 'Dados'])
     with abas[0]:
@@ -127,10 +141,10 @@ def main():
         mostrar_plotly(px.histogram(recorte, x='preco_imovel', nbins=40,
                                     labels=ROTULOS, title='Preço do imóvel no recorte',
                                     color_discrete_sequence=['#187a89']).update_layout(yaxis_title='Registros'))
-        st.write(f'O recorte reúne {br(len(recorte),0)} registros de {recorte.cidade.nunique()} cidades e {recorte.uf.nunique()} UFs, em {len(observados)} meses. A mediana do preço do imóvel é R$ {br(recorte.preco_imovel.median())}.')
+        st.write(f'O recorte reúne {quantidade(len(recorte), "registro", "registros")} de {quantidade(recorte.cidade.nunique(), "cidade", "cidades")} e {quantidade(recorte.uf.nunique(), "UF", "UFs")}, em {quantidade(len(observados), "mês", "meses")}. A mediana do preço do imóvel é R$ {br(recorte.preco_imovel.median())}.')
         q1, q3 = recorte.preco_imovel.quantile([.25, .75])
         extremos = ((recorte.preco_imovel < q1 - 1.5*(q3-q1)) | (recorte.preco_imovel > q3 + 1.5*(q3-q1))).sum()
-        st.caption(f'O IQR calculado neste recorte identifica {extremos} valores extremos. Eles permanecem na análise; a classificação não comprova erro.')
+        st.caption(f'O IQR calculado neste recorte identifica {quantidade(extremos, "valor extremo", "valores extremos")}. A classificação não comprova erro; nenhum registro é removido.')
     with abas[1]:
         st.subheader('Mediana mensal do preço por m²')
         fig = go.Figure()
@@ -156,12 +170,13 @@ def main():
         fig.update_layout(yaxis=dict(categoryorder='array', categoryarray=geo[coluna].tolist()), xaxis_tickprefix='R$ ')
         mostrar_plotly(fig)
         lider = geo.iloc[-1]
-        st.write(f'{lider[coluna]} tem a maior mediana neste agrupamento: R$ {br(lider.mediana)}/m², com {br(lider.registros,0)} registros. A comparação se limita às localidades presentes no recorte.')
+        st.write(f'{lider[coluna]} tem a maior mediana neste agrupamento: R$ {br(lider.mediana)}/m², com {quantidade(lider.registros, "registro", "registros")}. A comparação se limita às localidades presentes no recorte.')
     with abas[3]:
         st.subheader('Preço por tipo de imóvel')
         fig, ax = plt.subplots(figsize=(11,5))
         sns.boxplot(data=recorte, x='tipo_imovel', y='preco_imovel', color='#9bc9cf', ax=ax)
         ax.set(xlabel='Tipo de imóvel', ylabel='Preço do imóvel (R$)')
+        ax.yaxis.set_major_formatter(FuncFormatter(moeda_eixo))
         fig.tight_layout()
         st.pyplot(fig)
         plt.close(fig)
@@ -171,7 +186,7 @@ def main():
                                    hover_data=['cidade','quartos','vagas_garagem'], labels=ROTULOS,
                                    title='Área e preço do imóvel'))
         tipo = perfil.preco_imovel.idxmax()
-        st.write(f'{tipo} apresenta o maior preço mediano por tipo no recorte: R$ {br(perfil.loc[tipo,"preco_imovel"])}. A área mediana do recorte é {br(recorte.area_m2.median(),0)} m², com medianas de {br(recorte.quartos.median(),1)} quartos e {br(recorte.vagas_garagem.median(),1)} vagas.')
+        st.write(f'{tipo} apresenta o maior preço mediano por tipo no recorte: R$ {br(perfil.loc[tipo,"preco_imovel"])}. A área mediana do recorte é {br(recorte.area_m2.median(),0)} m², com medianas de {quantidade(recorte.quartos.median(), "quarto", "quartos", 1)} e {quantidade(recorte.vagas_garagem.median(), "vaga", "vagas", 1)}.')
     with abas[4]:
         st.subheader('Associações lineares')
         if len(recorte) < 30:
@@ -189,7 +204,7 @@ def main():
             st.write(f'A maior associação linear em magnitude é {forca}, entre {ROTULOS[par[0]]} e {ROTULOS[par[1]]}: r = {br(coef,3)}. Correlação não estabelece causalidade.')
         st.caption('Pearson usa as sete variáveis numéricas. Valores constantes não produzem correlação definida.')
     with abas[5]:
-        st.write(f'{br(len(recorte),0)} registros no recorte atual.')
+        st.write(f'{quantidade(len(recorte), "registro", "registros")} no recorte atual.')
         st.dataframe(recorte, width='stretch', hide_index=True)
         st.download_button('Baixar recorte em CSV', recorte.to_csv(index=False).encode('utf-8-sig'),
                            file_name='recorte_mercado_imobiliario.csv', mime='text/csv')
@@ -197,9 +212,12 @@ def main():
     st.divider()
     st.subheader('Conclusão do recorte')
     cidades = recorte.groupby('cidade').preco_m2.median()
-    temporal = f'A variação entre os meses extremos foi {br(variacao)}%.' if variacao is not None else 'Há apenas um mês disponível para análise temporal.'
-    associacao = f'A maior correlação absoluta foi {br(abs(coef),3)}.' if coef is not None else 'As correlações não puderam ser estimadas.'
-    narrar(f'O preço mediano é R$ {br(recorte.preco_imovel.median())}, e a mediana por m² é R$ {br(recorte.preco_m2.median())}. {cidades.idxmax()} apresenta a maior mediana por m² entre as cidades selecionadas. {temporal} {associacao} Estas conclusões descrevem a base simulada filtrada.')
+    temporal = f'A variação do primeiro ao último mês foi {br(variacao)}%.' if variacao is not None else 'Há apenas um mês disponível para análise temporal.'
+    if len(recorte) < 30:
+        associacao = 'A amostra é pequena e as correlações devem ser interpretadas com cautela.'
+    else:
+        associacao = f'A maior correlação absoluta foi {br(abs(coef),3)}.' if coef is not None else 'As correlações não puderam ser estimadas.'
+    narrar(f'O preço mediano é R$ {br(recorte.preco_imovel.median())}, e a mediana por m² é R$ {br(recorte.preco_m2.median())}. {cidades.idxmax()} apresenta a maior mediana por m² no recorte. {temporal} {associacao} Estas conclusões descrevem a base simulada filtrada.')
 
 
 if __name__ == '__main__':
