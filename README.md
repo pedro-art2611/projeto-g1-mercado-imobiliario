@@ -1,106 +1,120 @@
 # Mercado Imobiliário Brasileiro
 
-Análise de preços e comportamento do mercado na base simulada entre 2015 e 2024.
+Análise dos preços e do perfil dos imóveis em uma base simulada de 2015 a 2024. O projeto reúne a exploração dos dados em Python e um dashboard para comparar períodos, localidades e características dos imóveis.
+
+[Dashboard Streamlit](https://projeto-g1-mercado-imobiliario-9njgs7po5ls3yj7mvsc9kx.streamlit.app/) | [Apresentação no GitHub Pages](https://pedro-art2611.github.io/projeto-g1-mercado-imobiliario/)
 
 ## Identificação acadêmica
 
 - Aluno: Pedro Artur Brandão Murillo
 - Professor: Alexandre Neves Louzada
-- Disciplina: Linguagem de Programação: Análise e Visualização de Dados com Python
+- Disciplina: Linguagens de Programação
 - Avaliação: G1
 - Tema 12: Mercado Imobiliário Brasileiro
 
-## Sobre o projeto e problema analisado
+## Sobre o projeto
 
-O projeto investiga como os preços se comportam na base simulada, considerando localização, características dos imóveis e indicadores econômicos. O notebook documenta os cálculos e o dashboard permite explorar recortes.
+O mercado imobiliário foi o tema escolhido para estudar a distribuição dos preços e suas diferenças conforme a localização e o perfil dos imóveis. A base reúne preços, área, quartos, vagas de garagem, renda média e taxa de juros, permitindo comparar esses aspectos ao longo de dez anos.
 
-Pergunta central: **Como os preços dos imóveis se comportam na base simulada do mercado imobiliário brasileiro entre 2015 e 2024, considerando localização, características dos imóveis e indicadores econômicos?**
+A pergunta central é: **como os preços dos imóveis se comportam na base simulada do mercado imobiliário brasileiro entre 2015 e 2024, considerando localização, características dos imóveis e indicadores econômicos?**
+
+O trabalho foi desenvolvido na avaliação G1 para aplicar a análise e a visualização de dados com Python. O notebook apresenta os cálculos e a interpretação dos resultados; o dashboard permite explorar a mesma base com filtros e gráficos interativos.
 
 ## Base de dados
 
-O CSV foi obtido do [material do professor](https://github.com/AlexandreLouzada/Dados-Simulados-G2/blob/main/datasets_g2_30_temas/simulacao_mercado_imobiliario_brasil.csv) e preservado sem alterações.
+O projeto utiliza a base [simulacao_mercado_imobiliario_brasil.csv](https://github.com/AlexandreLouzada/Dados-Simulados-G2/blob/main/datasets_g2_30_temas/simulacao_mercado_imobiliario_brasil.csv), disponibilizada para o Tema 12 da atividade.
 
-A execução local confirmou 4.440 registros, 16 colunas originais e 120 meses, de janeiro de 2015 a dezembro de 2024. Há uma observação por cidade em cada mês: 37 cidades, 20 UFs e cinco regiões. A base não cobre todas as 27 UFs.
+São 4.440 registros e 16 colunas, distribuídos em 120 meses, de janeiro de 2015 a dezembro de 2024. Cada mês possui uma observação por cidade. A cobertura inclui 37 cidades, 20 UFs e as cinco regiões brasileiras.
 
-As variáveis incluem período, região, UF, cidade, bairro, tipo de imóvel, área, quartos, vagas, preço do imóvel, preço por m², renda média, taxa de juros e nível de preço. São dados simulados, sem representatividade estatística do mercado real.
+As colunas descrevem o período, a localização, o tipo de imóvel, a área, os quartos, as vagas, os preços e os indicadores econômicos. A base é simulada e não representa todo o mercado imobiliário brasileiro.
 
-## Perguntas da análise
+## O que foi analisado
 
-- Como a mediana do preço por m² oscila por mês?
-- Como as medianas diferem entre regiões, UFs e cidades presentes?
-- Como os preços se distribuem por tipo de imóvel, área, quartos e vagas?
-- Existem associações lineares entre preços, características e indicadores econômicos?
-- O preço por m² fornecido corresponde à razão entre preço e área?
+- A distribuição dos preços dos imóveis, do preço por m² e da área.
+- A evolução mensal do preço por m² e sua média móvel de 12 meses.
+- As diferenças entre regiões, UFs e cidades presentes na base.
+- O perfil dos imóveis por tipo, área, número de quartos e vagas.
+- As correlações entre preços, características dos imóveis, renda média e juros.
+- A consistência do preço por m² informado em relação ao preço e à área.
 
-## Tecnologias utilizadas
-
-| Tecnologia | Uso efetivo |
-| --- | --- |
-| Python e Pandas | Preparação, agregações, KPIs e média móvel |
-| NumPy | Auditoria numérica e seleção dos pares de correlação |
-| Matplotlib e Seaborn | Histogramas, boxplots e matriz de correlação |
-| Plotly | Gráficos interativos de distribuição, série temporal, geografia e dispersão |
-| Streamlit | Dashboard único com filtros dependentes |
-| SQLAlchemy e SQLite | Persistência e leitura dos registros preparados |
-| GitHub | Código, notebook e publicação da apresentação |
-
-## Estrutura do projeto
-
-```text
-app.py
-requirements.txt
-README.md
-index.html
-.gitignore
-dados/simulacao_mercado_imobiliario_brasil.csv
-database/mercado_imobiliario.sqlite
-notebooks/analise_mercado_imobiliario.ipynb
-imagens/dashboard-preview.png
-```
-
-## Tratamento e preparação
-
-As datas foram convertidas para `datetime` e foi criado `ano_mes` para agrupamento e filtros. Os testes não encontraram valores ausentes, duplicatas, datas inválidas, preços ou áreas não positivos, contagens negativas ou divergências entre data, ano e mês. As relações cidade/UF e UF/região foram conferidas. Nenhuma linha precisou ser removida.
-
-O método IQR classificou 248 preços como extremos, equivalentes a 5,59% dos registros. Eles foram mantidos: não há evidência suficiente de erro e preços elevados são plausíveis.
-
-`preco_m2_calculado = preco_imovel / area_m2` existe somente na auditoria do notebook. Sua correlação com o campo fornecido é -0,0175, e a diferença relativa absoluta mediana é 63,64%. O dashboard e o banco preservam `preco_m2` original. `nivel_preco` é tratado como categoria, sem presumir uma escala monetária coerente.
-
-## KPIs e principais resultados
+## Principais resultados
 
 | Indicador da base completa | Resultado |
 | --- | ---: |
 | Preço mediano do imóvel | R$ 537.645,22 |
-| Preço mediano por m² fornecido | R$ 10.968,15 |
+| Preço mediano por m² | R$ 10.968,15 |
 | Área mediana | 121 m² |
 | Taxa média de juros | 10,52% |
-| Registros | 4.440 |
+| Registros analisados | 4.440 |
 
-A mediana mensal por m² passou de R$ 11.564,40 em janeiro de 2015 para R$ 12.048,09 em dezembro de 2024, diferença de 4,18%. A série oscila; a diferença entre os extremos não demonstra valorização contínua. A média móvel considera 12 meses completos.
+A mediana mensal do preço por m² foi de R$ 11.564,40 em janeiro de 2015 e R$ 12.048,09 em dezembro de 2024, uma variação de 4,18%. Entre esses dois meses, a série apresenta oscilações. A diferença entre o primeiro e o último valor não significa que os preços tenham subido continuamente.
 
-Centro-Oeste apresenta a maior mediana regional por m², e Petrópolis a maior mediana entre as cidades presentes. Esses resultados são comparações dentro da simulação.
+Centro-Oeste apresenta a maior mediana regional por m². Entre as cidades da base, Petrópolis tem a maior mediana. Essas comparações se referem apenas aos registros simulados e às localidades presentes.
 
-A maior correlação linear absoluta entre as sete variáveis analisadas é de aproximadamente 0,034, entre vagas de garagem e renda média (r = -0,0337). As associações são fracas e não demonstram causalidade.
+As correlações lineares entre as sete variáveis numéricas são fracas. A maior magnitude é próxima de 0,034, entre vagas de garagem e renda média (r = -0,0337). Esses valores não sustentam uma relação linear forte nem uma explicação causal para os preços.
 
-## Funcionalidades intermediárias
+## Tratamento dos dados
 
-O dashboard permite filtrar período, região, UF, cidade, tipo de imóvel e nível de preço. As opções geográficas dependem das seleções anteriores. KPIs, gráficos, tabelas e interpretações acompanham o recorte, que pode ser baixado em CSV.
+Antes da análise, foram verificados valores ausentes, duplicatas, datas, valores inválidos e a consistência das relações entre cidade, UF e região. Não foram encontrados problemas que exigissem a remoção de linhas. A coluna `data` foi convertida para `datetime`, e `ano_mes` foi criada para organizar os períodos.
 
-## Funcionalidades avançadas
+O intervalo interquartil (IQR) identificou 248 preços extremos, equivalentes a 5,59% dos registros. Esses valores foram mantidos: preços elevados podem ocorrer em dados imobiliários, e a classificação pelo IQR, por si só, não indica um erro. Por isso, a mediana foi utilizada nas principais comparações de preço.
 
-Os dados preparados estão na tabela `mercado_imobiliario` do SQLite versionado. O app lê o banco com SQLAlchemy e utiliza cache; se o banco não existir, reconstrói a tabela a partir do CSV. O notebook demonstra uma consulta SQL.
+Também foi calculada a razão `preco_m2_calculado = preco_imovel / area_m2` para comparar com o preço por m² informado. A correlação entre os dois é -0,0175, e a diferença relativa absoluta mediana é 63,64%. Nesta simulação, os campos não são matematicamente equivalentes. O cálculo ficou restrito à verificação no notebook; o dashboard utiliza `preco_m2` original, e o CSV não foi alterado.
 
-Também foram implementadas média móvel de 12 meses, correlação estatística, gráficos interativos e conclusão dinâmica. Recortes com um mês, um registro ou correlações indefinidas são tratados.
+## Dashboard
 
-## Análises realizadas
+O [dashboard do projeto](https://projeto-g1-mercado-imobiliario-9njgs7po5ls3yj7mvsc9kx.streamlit.app/) permite filtrar período, região, UF, cidade, tipo de imóvel e nível de preço. As opções de UF e cidade acompanham a seleção geográfica, e os KPIs, gráficos e textos mudam conforme o recorte.
 
-O [notebook executado](notebooks/analise_mercado_imobiliario.ipynb) contém inspeção, qualidade, estatísticas descritivas, IQR, auditoria do preço por m², persistência, distribuição de preços e área, análise temporal, comparação geográfica, perfil por tipo, quartos e vagas, correlação e conclusão.
+As abas apresentam a distribuição dos preços, a evolução mensal com média móvel de 12 meses e as comparações geográficas. O perfil dos imóveis pode ser explorado pelo boxplot de preços por tipo e pelo gráfico de dispersão entre área e preço. A matriz de correlação reúne as associações entre as variáveis numéricas.
 
-![Dashboard local](imagens/dashboard-preview.png)
+Na aba de dados, é possível consultar a tabela filtrada e baixar o recorte em CSV. Ao final da página, uma conclusão resume os resultados da seleção atual.
 
-## Como executar localmente
+![Dashboard do projeto](imagens/dashboard-preview.png)
 
-Recomendado: Python 3.12 ou superior.
+## Tecnologias
+
+| Tecnologia | Onde foi utilizada |
+| --- | --- |
+| Python | Código da análise e do dashboard |
+| Pandas | Leitura, preparação, agrupamentos, KPIs, média móvel e correlação |
+| NumPy | Comparação numérica do preço por m² e seleção dos pares de correlação |
+| Matplotlib | Figuras estáticas, eixos e formatação dos gráficos |
+| Seaborn | Histogramas, boxplot e matriz de correlação |
+| Plotly | Gráficos interativos de distribuição, tempo, localização e dispersão |
+| Streamlit | Interface do dashboard, filtros, abas e tabela de dados |
+| SQLAlchemy | Conexão, gravação e consultas ao banco |
+| SQLite | Armazenamento dos registros preparados |
+| GitHub | Versionamento do código, acesso ao notebook e publicação da apresentação |
+
+## Funcionalidades implementadas
+
+O dashboard combina filtros múltiplos, KPIs dinâmicos e gráficos interativos em seis abas. A análise temporal inclui a mediana mensal e a média móvel de 12 meses; as comparações geográficas permitem alternar entre região, UF e cidade.
+
+A persistência usa **SQLite com SQLAlchemy**, na tabela `mercado_imobiliario`. O notebook grava a base preparada e apresenta uma consulta SQL. O app lê esse banco com cache e, caso o arquivo não exista, cria a tabela a partir do CSV.
+
+A **correlação estatística** compara área, quartos, vagas, preço do imóvel, preço por m², renda média e taxa de juros. A matriz é acompanhada de uma interpretação, com um aviso de cautela quando o recorte possui poucos registros.
+
+## Estrutura do projeto
+
+```text
+projeto-g1-mercado-imobiliario/
+├── app.py
+├── requirements.txt
+├── README.md
+├── index.html
+├── dados/
+│   └── simulacao_mercado_imobiliario_brasil.csv
+├── database/
+│   └── mercado_imobiliario.sqlite
+├── notebooks/
+│   └── analise_mercado_imobiliario.ipynb
+└── imagens/
+    └── dashboard-preview.png
+```
+
+## Como executar
+
+Utilize Python 3.12 ou superior. Para baixar o projeto e criar o ambiente virtual:
 
 ```bash
 git clone https://github.com/pedro-art2611/projeto-g1-mercado-imobiliario.git
@@ -108,7 +122,7 @@ cd projeto-g1-mercado-imobiliario
 python -m venv .venv
 ```
 
-No Windows (PowerShell):
+Ative o ambiente no Windows (PowerShell):
 
 ```powershell
 .venv\Scripts\Activate.ps1
@@ -120,32 +134,39 @@ No Linux ou macOS:
 source .venv/bin/activate
 ```
 
-Depois:
+Instale as dependências e inicie o dashboard:
 
 ```bash
 python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-Para reexecutar o notebook, instale as ferramentas opcionais:
+### Reexecutar o notebook
+
+Na raiz do projeto, com o ambiente virtual ativo:
 
 ```bash
 python -m pip install jupyter nbconvert ipykernel
 jupyter nbconvert --to notebook --execute --inplace notebooks/analise_mercado_imobiliario.ipynb
 ```
 
-Execute a partir da raiz do projeto. O notebook recria a tabela SQLite; o CSV permanece intacto. As ferramentas Jupyter não são necessárias para o dashboard.
+Esse comando atualiza as saídas do notebook e recria a tabela SQLite, sem alterar o CSV. As ferramentas Jupyter são necessárias apenas para trabalhar com o notebook.
 
-## Publicação
+## Links
 
-- [Repositório GitHub](https://github.com/pedro-art2611/projeto-g1-mercado-imobiliario)
-- [Apresentação no GitHub Pages](https://pedro-art2611.github.io/projeto-g1-mercado-imobiliario/)
+- [Repositório](https://github.com/pedro-art2611/projeto-g1-mercado-imobiliario)
+- [GitHub Pages](https://pedro-art2611.github.io/projeto-g1-mercado-imobiliario/)
 - [Dashboard Streamlit](https://projeto-g1-mercado-imobiliario-9njgs7po5ls3yj7mvsc9kx.streamlit.app/)
+- [Notebook](https://github.com/pedro-art2611/projeto-g1-mercado-imobiliario/blob/main/notebooks/analise_mercado_imobiliario.ipynb)
 
-No Streamlit Community Cloud, selecione o repositório, branch `main` e arquivo `app.py`. Recomenda-se Python 3.12. No GitHub Pages, utilize a branch `main` e a pasta raiz `/` como origem.
+## Limitações
 
-## Limitações e conclusão
+A base é simulada e cobre 20 UFs, não todas as UFs brasileiras. Os preços são nominais, sem ajuste de inflação, e os registros não acompanham imóveis individuais ao longo do tempo.
 
-A simulação não acompanha imóveis individuais, não cobre todas as UFs e não ajusta os preços pela inflação. Os indicadores de preço por m² não são matematicamente equivalentes à razão entre preço e área. Os níveis de preço não devem ser usados como uma escala quantitativa.
+O campo `preco_m2` fornecido não corresponde matematicamente à razão entre preço e área. Da mesma forma, `nivel_preco` é usado como categoria exploratória, sem interpretá-lo como uma escala quantitativa.
 
-A base apresenta dispersão de preços e oscilações mensais. A mediana permite resumir o conjunto sem eliminar os valores extremos. As correlações lineares são fracas. As conclusões se limitam aos registros analisados e não descrevem todo o mercado imobiliário brasileiro.
+## Conclusão
+
+A base apresenta grande dispersão de preços e oscilações mensais. A mediana ajuda a comparar os registros sem deixar que os valores extremos dominem o resumo, enquanto a média móvel facilita a leitura do comportamento ao longo do período.
+
+As diferenças entre localidades e perfis descrevem o conjunto analisado, mas as correlações lineares são fracas. Os resultados permitem discutir o comportamento desta simulação, sem extrapolá-lo para o mercado imobiliário brasileiro real.

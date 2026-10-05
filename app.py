@@ -104,7 +104,7 @@ def main():
     st.title('Mercado Imobiliário Brasileiro')
     st.write('Análise de preços e comportamento na base simulada entre 2015 e 2024.')
     st.caption('Pedro Artur Brandão Murillo | Professor Alexandre Neves Louzada | Avaliação G1')
-    st.caption('Linguagem de Programação: Análise e Visualização de Dados com Python')
+    st.caption('Linguagens de Programação')
     st.info('Dados simulados para atividade acadêmica. O preço por m² é o campo original da base, que diverge da razão entre preço e área. Os resultados não representam o mercado real brasileiro.')
     dados = carregar_dados()
     st.sidebar.header('Recorte da análise')
